@@ -14,7 +14,7 @@ decisiones de reposición.
 | Integrante | Rol Scrum | Rol técnico |
 |---|---|---|
 | Maria Urcuqui | Product Owner | Developer |
-| |Jeison Avila| Developer |
+| |Jeison Avila|| Scrum Master | Developer |
 | Matium Cuadros | Developer | Developer |
 
 ## Tecnologías
