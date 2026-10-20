@@ -26,4 +26,4 @@ decisiones de reposición.
 (se irá completando durante los sprints)
 
 ## Enlaces
-git@github.com:Jei-98/inventario-ambientes-sena.git
+https://github.com/Jei-98/inventario-ambientes-sena.git
