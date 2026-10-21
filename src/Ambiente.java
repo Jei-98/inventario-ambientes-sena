@@ -35,10 +35,20 @@ public class Ambiente {
                 return e;
             }
         }
-        return null;
+              return null;
     }
 
     void agregarElemento(Elemento elemento) {
         elementos.add(elemento);
+    }
+
+    public List<Elemento> obtenerElementosConFaltante() {
+        List<Elemento> conFaltante = new ArrayList<>();
+        for (Elemento e : elementos) {
+            if (e.tieneFaltante()) {
+                conFaltante.add(e);
+            }
+        }
+        return conFaltante;
     }
 }
