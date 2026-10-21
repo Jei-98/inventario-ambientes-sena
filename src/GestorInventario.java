@@ -57,4 +57,36 @@ public class GestorInventario {
 
         ambiente.agregarElemento(elemento);
     }
+
+    
+    public void actualizarElemento(String nombreAmbiente, String nombreElemento,
+                                   int nuevaCantidad, String nuevoEstado)
+            throws DatoInvalidoException {
+
+        Ambiente ambiente = (nombreAmbiente == null) ? null : buscarAmbiente(nombreAmbiente);
+        if (ambiente == null) {
+            throw new DatoInvalidoException(
+                "El ambiente '" + nombreAmbiente + "' no existe.");
+        }
+
+        Elemento elemento = ambiente.buscarElemento(nombreElemento);
+        if (elemento == null) {
+            throw new DatoInvalidoException(
+                "El elemento '" + nombreElemento + "' no existe en el ambiente '"
+                + ambiente.getNombre() + "'.");
+        }
+
+        if (nuevaCantidad < 0) {
+            throw new DatoInvalidoException(
+                "La cantidad no puede ser negativa. Se conserva el valor anterior ("
+                + elemento.getCantidadActual() + ").");
+        }
+
+        try {
+            elemento.setEstado(nuevoEstado);
+        } catch (IllegalArgumentException e) {
+            throw new DatoInvalidoException(e.getMessage());
+        }
+        elemento.setCantidadActual(nuevaCantidad);
+    }
 }
