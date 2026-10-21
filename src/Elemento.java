@@ -41,7 +41,7 @@ public class Elemento {
         return estado;
     }
 
-    public void setEstado(String estado) {
+       public void setEstado(String estado) {
         this.estado = validarEstado(estado);
     }
 
@@ -55,6 +55,13 @@ public class Elemento {
 
     public boolean tieneFaltante() {
         return cantidadActual < cantidadEsperada;
+    }
+
+    public int calcularFaltante() {
+        if (cantidadActual >= cantidadEsperada) {
+            return 0;
+        }
+        return cantidadEsperada - cantidadActual;
     }
 
     private static String validarEstado(String estado) {
