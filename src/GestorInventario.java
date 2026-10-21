@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GestorInventario {
@@ -56,5 +57,37 @@ public class GestorInventario {
         }
 
         ambiente.agregarElemento(elemento);
+    }
+    public void mostrarInventarioAmbiente(String nombreAmbiente) {
+        if (nombreAmbiente == null || nombreAmbiente.trim().isEmpty()) {
+            System.out.println("El nombre del ambiente no puede estar vacío.");
+            return;
+        }
+
+        Ambiente ambiente = buscarAmbiente(nombreAmbiente);
+        
+        // Criterio: Si el ambiente no existe, se informa con un mensaje claro
+        if (ambiente == null) {
+            System.out.println("El ambiente '" + nombreAmbiente + "' no existe en el sistema.");
+            return;
+        }
+
+        List<Elemento> elementos = ambiente.getElementos();
+        
+        // Criterio: Si no tiene elementos, se informa con un mensaje claro
+        if (elementos.isEmpty()) {
+            System.out.println("El ambiente '" + ambiente.getNombre() + "' no tiene elementos registrados actualmente.");
+            return;
+        }
+
+        // Mostrar la lista completa del inventario
+        System.out.println("\n--- INVENTARIO DEL AMBIENTE: " + ambiente.getNombre() + " (Piso: " + ambiente.getPiso() + ") ---");
+        for (Elemento e : elementos) {
+            System.out.println("• Nombre: " + e.getNombre() 
+                    + " | Cant. Actual: " + e.getCantidadActual() 
+                    + " | Cant. Esperada: " + e.getCantidadEsperada() 
+                    + " | Estado: " + e.getEstado());
+        }
+        System.out.println("------------------------------------------------------------------");
     }
 }
