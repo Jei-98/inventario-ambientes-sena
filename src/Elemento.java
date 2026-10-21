@@ -1,6 +1,5 @@
 public class Elemento {
 
-    // Constantes de estado (DANADO guarda el texto "DAÑADO")
     public static final String BUENO = "BUENO";
     public static final String REGULAR = "REGULAR";
     public static final String DANADO = "DA\u00D1ADO";
@@ -44,6 +43,14 @@ public class Elemento {
 
        public void setEstado(String estado) {
         this.estado = validarEstado(estado);
+    }
+
+    /** Una cantidad negativa se rechaza y se conserva el valor anterior. */
+    public void setCantidadActual(int cantidadActual) {
+        if (cantidadActual < 0) {
+            throw new IllegalArgumentException("La cantidad actual no puede ser negativa.");
+        }
+        this.cantidadActual = cantidadActual;
     }
 
     public boolean tieneFaltante() {
