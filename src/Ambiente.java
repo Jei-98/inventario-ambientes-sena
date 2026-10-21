@@ -35,7 +35,7 @@ public class Ambiente {
                 return e;
             }
         }
-        return null;
+              return null;
     }
 
     public void agregarElemento(Elemento elemento) {
@@ -55,5 +55,15 @@ public class Ambiente {
         
         // Si pasa todas las validaciones, lo agregamos al ArrayList
         elementos.add(elemento);
+    }
+
+    public List<Elemento> obtenerElementosConFaltante() {
+        List<Elemento> conFaltante = new ArrayList<>();
+        for (Elemento e : elementos) {
+            if (e.tieneFaltante()) {
+                conFaltante.add(e);
+            }
+        }
+        return conFaltante;
     }
 }
