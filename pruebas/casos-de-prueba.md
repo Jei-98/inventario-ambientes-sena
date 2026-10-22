@@ -30,9 +30,9 @@
 
 ### CP-03: Entrada inválida al registrar ambiente
 * **Identificador:** CP-03
-* **Descripción:** Comprobar que el sistema valide entradas nulas o vacías en el nombre del ambiente.
+* **Descripción:** Comprobar que la clase Validaciones rechace nombres nulos o vacíos en el nombre del ambiente.
 * **Datos de Entrada:**
-  * Nombre: `""` (cadena vacía) o `null`
+  * Nombre: `""`, `"   "` (solo espacios) y `null`, probados con pruebas/PruebasValidaciones.java
 * **Resultado Esperado:** El sistema no procesa la solicitud y muestra advertencia sobre nombre de ambiente inválido.
-* **Resultado Obtenido:** Se valida el dato de entrada y se muestra mensaje de error sin que colapse el programa.
+* **Resultado Obtenido:** PruebasValidaciones confirmó que los tres nombres son rechazados; para el nombre vacío se mostró "El nombre del ambiente no puede estar vacio." sin que el programa se cerrara.
 * **Estado:** PASÓ (Aprobado)
