@@ -9,8 +9,7 @@ public class Main {
 
         do {
             mostrarMenu();
-            opcion = sc.nextInt();
-            sc.nextLine();
+            opcion = leerEntero(sc, "Elige una opción: ");
 
             switch (opcion) {
                 case 1:
@@ -31,15 +30,24 @@ public class Main {
         System.out.println("\n===== INVENTARIO DE AMBIENTES SENA =====");
         System.out.println("1. Registrar ambiente");
         System.out.println("0. Salir");
-        System.out.print("Elige una opción: ");
+    }
+
+    private static int leerEntero(Scanner sc, String mensaje) {
+        while (true) {
+            System.out.print(mensaje);
+            String texto = sc.nextLine().trim();
+            try {
+                return Integer.parseInt(texto);
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada no válida: escribe un número entero.");
+            }
+        }
     }
 
     private static void registrarAmbiente(GestorInventario gestor, Scanner sc) {
         System.out.print("Nombre del ambiente: ");
         String nombre = sc.nextLine();
-        System.out.print("Piso: ");
-        int piso = sc.nextInt();
-        sc.nextLine();
+        int piso = leerEntero(sc, "Piso: ");
 
         if (gestor.registrarAmbiente(new Ambiente(nombre, piso))) {
             System.out.println("Ambiente registrado.");

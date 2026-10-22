@@ -1,10 +1,17 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class GestorInventario {
 
     private Map<String, Ambiente> ambientes = new HashMap<>();
+
+    private ArrayList<Observacion> observaciones = new ArrayList<>();
+    private Set<String> reportesRegistrados = new HashSet<>();
 
     public boolean registrarAmbiente(Ambiente ambiente) {
         String clave = ambiente.getNombre().trim().toLowerCase();
@@ -19,6 +26,33 @@ public class GestorInventario {
 
     public Ambiente buscarAmbiente(String nombre) {
         return ambientes.get(nombre.trim().toLowerCase());
+    }
+
+    public boolean registrarObservacion(Observacion observacion) {
+        if (observacion == null) {
+            return false;
+        }
+        if (!reportesRegistrados.add(claveReporte(observacion))) {
+            return false;
+        }
+        observaciones.add(observacion);
+        return true;
+    }
+
+    public List<Observacion> getObservaciones() {
+        return Collections.unmodifiableList(observaciones);
+    }
+
+    private String claveReporte(Observacion o) {
+        String nombreAmbiente = (o.getAmbiente() == null) ? "" : o.getAmbiente().getNombre();
+        String nombreElemento = (o.getElemento() == null) ? "" : o.getElemento().getNombre();
+        return normalizar(nombreAmbiente) + "|" + normalizar(nombreElemento) + "|"
+                + normalizar(o.getTipo()) + "|" + o.getCantidadAfectada() + "|"
+                + normalizar(o.getDescripcion()) + "|" + normalizar(o.getFecha());
+    }
+
+    private String normalizar(String texto) {
+        return (texto == null) ? "" : texto.trim().toLowerCase();
     }
 
     
