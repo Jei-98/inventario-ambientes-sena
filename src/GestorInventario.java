@@ -31,6 +31,18 @@ public class GestorInventario {
         return true;
     }
 
+    public void crearAmbiente(String nombre, int piso) throws DatoInvalidoException {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new DatoInvalidoException("El nombre no puede estar vacio.");
+        }
+        if (piso <= 0) {
+            throw new DatoInvalidoException("El piso debe ser un numero positivo.");
+        }
+        if (!registrarAmbiente(new Ambiente(nombre.trim(), piso))) {
+            throw new DatoInvalidoException("Ya existe un ambiente con ese nombre.");
+        }
+    }
+
     public Ambiente buscarAmbiente(String nombre) {
         return ambientes.get(nombre.trim().toLowerCase());
     }
