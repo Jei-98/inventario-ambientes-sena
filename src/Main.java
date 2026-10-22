@@ -84,23 +84,15 @@ public class Main {
         return sc.nextLine().trim();
     }
 
-    private static void registrarAmbiente(GestorInventario gestor, Scanner sc) {
+        private static void registrarAmbiente(GestorInventario gestor, Scanner sc) {
         String nombre = leerTexto(sc, "Nombre del ambiente: ");
         int piso = leerEntero(sc, "Piso: ");
 
-        if (nombre.isEmpty()) {
-            System.out.println("El nombre no puede estar vacio.");
-            return;
-        }
-        if (piso <= 0) {
-            System.out.println("El piso debe ser un numero positivo.");
-            return;
-        }
-
-        if (gestor.registrarAmbiente(new Ambiente(nombre, piso))) {
+        try {
+            gestor.crearAmbiente(nombre, piso);
             System.out.println("Ambiente registrado.");
-        } else {
-            System.out.println("Ya existe un ambiente con ese nombre.");
+        } catch (DatoInvalidoException e) {
+            System.out.println("No se registro: " + e.getMessage());
         }
     }
 
