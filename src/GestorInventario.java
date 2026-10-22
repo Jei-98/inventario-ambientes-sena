@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.time.LocalDate;
+import java.util.Comparator;
 
 public class GestorInventario {
 
@@ -215,5 +216,74 @@ public class GestorInventario {
         }
         throw new DatoInvalidoException(
             "Tipo no valido: '" + tipo + "'. Use Faltante, Perdida o Dano.");
+    }
+    
+    public List<Ambiente> filtrarAmbientesPorPiso(int piso) {
+        List<Ambiente> resultado = new ArrayList<>();
+        for (Ambiente a : ambientes.values()) {
+            if (a.getPiso() == piso) {
+                resultado.add(a);
+            }
+        }
+        resultado.sort(Comparator.comparing(Ambiente::getNombre, String.CASE_INSENSITIVE_ORDER));
+        return resultado;
+    }
+
+    public List<Observacion> listarObservacionesDeAmbiente(String nombreAmbiente,
+            boolean soloPendientes) throws DatoInvalidoException {
+
+        Ambiente ambiente = (nombreAmbiente == null || nombreAmbiente.trim().isEmpty())
+                ? null : buscarAmbiente(nombreAmbiente);
+        if (ambiente == null) {
+            throw new DatoInvalidoException(
+                "El ambiente '" + nombreAmbiente + "' no existe.");
+        }
+
+        List<Observacion> resultado = new ArrayList<>();
+        for (Observacion o : observaciones) {
+            boolean esDelAmbiente = o.getAmbiente() != null
+                    && o.getAmbiente().getNombre().equalsIgnoreCase(ambiente.getNombre());
+            if (esDelAmbiente && (!soloPendientes || !o.estaResuelta())) {
+                resultado.add(o);
+            }
+        }
+        return resultado;
+    }
+
+    public void mostrarAmbientesPorPiso(int piso) {
+        List<Ambiente> lista = filtrarAmbientesPorPiso(piso);
+        if (lista.isEmpty()) {
+            System.out.println("No hay ambientes registrados en el piso " + piso + ".");
+            return;
+        }
+        System.out.println("\n--- AMBIENTES DEL PISO " + piso + " ---");
+        for (Ambiente a : lista) {
+            System.out.println("- " + a.getNombre());
+        }
+    }
+
+    public void mostrarObservacionesAmbiente(String nombreAmbiente, boolean soloPendientes) {
+        List<Observacion> lista;
+        try {
+            lista = listarObservacionesDeAmbiente(nombreAmbiente, soloPendientes);
+        } catch (DatoInvalidoException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+
+        if (lista.isEmpty()) {
+            System.out.println("No hay observaciones" + (soloPendientes ? " pendientes" : "")
+                    + " para el ambiente '" + nombreAmbiente + "'.");
+            return;
+        }
+
+        System.out.println("\n--- OBSERVACIONES DE " + nombreAmbiente.trim() + " ---");
+        for (Observacion o : lista) {
+            System.out.println("[" + o.getEstado() + "] " + o.getFecha()
+                    + " | " + o.getElemento().getNombre()
+                    + " | " + o.getTipo()
+                    + " | Cant: " + o.getCantidadAfectada()
+                    + " | " + o.getDescripcion());
+        }
     }
 }
