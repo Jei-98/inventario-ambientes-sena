@@ -37,11 +37,17 @@ public class Main {
                 case 8:
                     resolverObservacion(gestor, sc);
                     break;
+                case 9:
+                    gestor.mostrarReporteFaltantes();
+                    break;
+                    
                 case 0:
                     System.out.println("Hasta pronto.");
                     break;
+                    
                 default:
                     System.out.println("Opcion no valida. Intenta de nuevo.");
+                    System.out.println("9. Reporte de faltantes por piso");
             }
         } while (opcion != 0);
 

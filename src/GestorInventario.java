@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.TreeMap;
 
 public class GestorInventario {
 
@@ -284,6 +285,49 @@ public class GestorInventario {
                     + " | " + o.getTipo()
                     + " | Cant: " + o.getCantidadAfectada()
                     + " | " + o.getDescripcion());
+        }
+    }
+    
+    public Map<Integer, Integer> calcularFaltantesPorPiso() {
+        Map<Integer, Integer> totales = new TreeMap<>();
+        for (Ambiente a : ambientes.values()) {
+            int sumaAmbiente = 0;
+            for (Elemento e : a.obtenerElementosConFaltante()) {
+                sumaAmbiente += e.calcularFaltante();
+            }
+            if (sumaAmbiente > 0) {
+                totales.merge(a.getPiso(), sumaAmbiente, Integer::sum);
+            }
+        }
+        return totales;
+    }
+
+    public void mostrarReporteFaltantes() {
+        Map<Integer, Integer> totales = calcularFaltantesPorPiso();
+        if (totales.isEmpty()) {
+            System.out.println("No hay faltantes: todos los elementos estan completos.");
+            return;
+        }
+
+        List<Ambiente> lista = new ArrayList<>(ambientes.values());
+        lista.sort(Comparator.comparing(Ambiente::getNombre, String.CASE_INSENSITIVE_ORDER));
+
+        System.out.println("\n===== REPORTE DE FALTANTES POR PISO =====");
+        for (Map.Entry<Integer, Integer> par : totales.entrySet()) {
+            int piso = par.getKey();
+            System.out.println("\nPiso " + piso);
+            for (Ambiente a : lista) {
+                if (a.getPiso() != piso) {
+                    continue;
+                }
+                for (Elemento e : a.obtenerElementosConFaltante()) {
+                    System.out.println("  " + a.getNombre() + " | " + e.getNombre()
+                            + " | esperada: " + e.getCantidadEsperada()
+                            + " | actual: " + e.getCantidadActual()
+                            + " | faltan: " + e.calcularFaltante());
+                }
+            }
+            System.out.println("  TOTAL piso " + piso + ": " + par.getValue());
         }
     }
 }
