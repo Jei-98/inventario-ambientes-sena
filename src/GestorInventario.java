@@ -205,13 +205,18 @@ public class GestorInventario {
             throw new DatoInvalidoException("La descripcion no puede estar vacia.");
         }
 
-        // Todas las validaciones pasaron: recien ahora se modifica el inventario.
+        Observacion nueva = new Observacion(ambiente, elemento, tipoNormalizado,
+                cantidadAfectada, descripcion.trim(), LocalDate.now().toString());
+
+        if (reportesRegistrados.contains(claveReporte(nueva))) {
+            throw new DatoInvalidoException("Ese reporte ya estaba registrado.");
+        }
+
         if (tipoNormalizado.equals(TIPO_PERDIDA) || tipoNormalizado.equals(TIPO_DANIO)) {
             elemento.setCantidadActual(elemento.getCantidadActual() - cantidadAfectada);
         }
 
-        return new Observacion(ambiente, elemento, tipoNormalizado,
-                cantidadAfectada, descripcion.trim(), LocalDate.now().toString());
+        return nueva;
     }
 
     private String normalizarTipo(String tipo) throws DatoInvalidoException {
