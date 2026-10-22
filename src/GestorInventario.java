@@ -5,10 +5,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.time.LocalDate;
 
 public class GestorInventario {
 
+    public static final String TIPO_FALTANTE = "Faltante";
+    public static final String TIPO_PERDIDA = "P\u00E9rdida";
+    public static final String TIPO_DANIO = "Da\u00F1o";
     private Map<String, Ambiente> ambientes = new HashMap<>();
+    
 
     private ArrayList<Observacion> observaciones = new ArrayList<>();
     private Set<String> reportesRegistrados = new HashSet<>();
@@ -120,5 +125,62 @@ public class GestorInventario {
                     + " | Estado: " + e.getEstado());
         }
         System.out.println("------------------------------------------------------------------");
+    }
+    
+    public Observacion crearObservacion(String nombreAmbiente, String nombreElemento,
+            String tipo, int cantidadAfectada, String descripcion)
+            throws DatoInvalidoException {
+
+        Ambiente ambiente = (nombreAmbiente == null) ? null : buscarAmbiente(nombreAmbiente);
+        if (ambiente == null) {
+            throw new DatoInvalidoException(
+                "El ambiente '" + nombreAmbiente + "' no existe.");
+        }
+
+        Elemento elemento = ambiente.buscarElemento(nombreElemento);
+        if (elemento == null) {
+            throw new DatoInvalidoException(
+                "El elemento '" + nombreElemento + "' no existe en el ambiente '"
+                + ambiente.getNombre() + "'.");
+        }
+
+        String tipoNormalizado = normalizarTipo(tipo);
+
+        if (cantidadAfectada <= 0) {
+            throw new DatoInvalidoException("La cantidad afectada debe ser mayor que cero.");
+        }
+        if (cantidadAfectada > elemento.getCantidadActual()) {
+            throw new DatoInvalidoException(
+                "La cantidad afectada (" + cantidadAfectada
+                + ") supera la cantidad registrada (" + elemento.getCantidadActual() + ").");
+        }
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new DatoInvalidoException("La descripcion no puede estar vacia.");
+        }
+
+        // Todas las validaciones pasaron: recien ahora se modifica el inventario.
+        if (tipoNormalizado.equals(TIPO_PERDIDA) || tipoNormalizado.equals(TIPO_DANIO)) {
+            elemento.setCantidadActual(elemento.getCantidadActual() - cantidadAfectada);
+        }
+
+        return new Observacion(ambiente, elemento, tipoNormalizado,
+                cantidadAfectada, descripcion.trim(), LocalDate.now().toString());
+    }
+
+    private String normalizarTipo(String tipo) throws DatoInvalidoException {
+        if (tipo != null) {
+            String limpio = tipo.trim();
+            if (limpio.equalsIgnoreCase(TIPO_FALTANTE)) {
+                return TIPO_FALTANTE;
+            }
+            if (limpio.equalsIgnoreCase(TIPO_PERDIDA) || limpio.equalsIgnoreCase("Perdida")) {
+                return TIPO_PERDIDA;
+            }
+            if (limpio.equalsIgnoreCase(TIPO_DANIO) || limpio.equalsIgnoreCase("Dano")) {
+                return TIPO_DANIO;
+            }
+        }
+        throw new DatoInvalidoException(
+            "Tipo no valido: '" + tipo + "'. Use Faltante, Perdida o Dano.");
     }
 }
