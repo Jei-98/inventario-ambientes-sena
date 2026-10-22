@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class Observacion {
 
     private Ambiente ambiente;
@@ -7,8 +9,8 @@ public class Observacion {
     private String descripcion;
     private String fecha;
     private String estado;
+    private String fechaResolucion; 
 
-    // Constructor: aquí aplicamos el criterio de que toda observación nueva nace en "Pendiente"
     public Observacion(Ambiente ambiente, Elemento elemento, String tipo, int cantidadAfectada, String descripcion, String fecha) {
         this.ambiente = ambiente;
         this.elemento = elemento;
@@ -16,10 +18,9 @@ public class Observacion {
         this.cantidadAfectada = cantidadAfectada;
         this.descripcion = descripcion;
         this.fecha = fecha;
-        this.estado = "Pendiente"; // Cumple con el criterio de aceptación
+        this.estado = "Pendiente"; 
     }
 
-    // Getters para consultar la información
     public Ambiente getAmbiente() {
         return ambiente;
     }
@@ -48,8 +49,25 @@ public class Observacion {
         return estado;
     }
 
-    // Setter para permitir cambiar el estado de la observación más adelante (ej. de Pendiente a Resuelto)
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getFechaResolucion() {
+        return fechaResolucion;
+    }
+
+    public boolean estaResuelta() {
+        return "Resuelta".equals(estado);
+    }
+
+    
+    public void marcarComoResuelta() throws DatoInvalidoException {
+        if (estaResuelta()) {
+            throw new DatoInvalidoException(
+                "La observacion ya esta resuelta (fecha de resolucion: " + fechaResolucion + ").");
+        }
+        this.estado = "Resuelta";
+        this.fechaResolucion = LocalDate.now().toString();
     }
 }
